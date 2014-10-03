@@ -1,0 +1,206 @@
+
+root@buffy ~]# service mysql start
+ Starting MySQL..                                           [  OK  ]
+ [root@buffy ~]# service mysql status
+ MySQL running (11569)                                      [  OK  ]
+
+ [root@buffy ~]# mysql
+ Welcome to the MySQL monitor.  Commands end with ; or \g.
+ Your MySQL connection id is 6
+ Server version: 5.5.37 MySQL Community Server (GPL)
+
+ Copyright (c) 2000, 2014, Oracle and/or its affiliates. All rights reserved.
+
+ Oracle is a registered trademark of Oracle Corporation and/or its
+ affiliates. Other names may be trademarks of their respective
+ owners.
+
+ Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+ mysql> show databases;
+ +--------------------+
+ | Database           |
+ +--------------------+
+ | information_schema |
+ | mysql              |
+ | performance_schema |
+ | test               |
+ +--------------------+
+ 4 rows in set (0.00 sec)
+
+ mysql> use test;
+ Database changed
+ mysql> show tables;
+ Empty set (0.00 sec)
+
+ mysql>
+
+http://dev.mysql.com/downloads/mysql/5.5.html
+
+http://dev.mysql.com/doc/refman/5.5/en/linux-installation-rpm.html
+
+
+How To Enable EPEL Repository in RHEL/CentOS 6/5?
+#wget http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
+
+
+
+
+
+
+
+
+ 
+
+ 
+
+ 
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Ming Chen <mingchen62@gmail.com>  
+ 
+
+May 16 (8 days ago)
+ 
+ 
+
+
+ 
+
+
+
+to Yong, Larry, Ning 
+
+ 
+ 
+
+
+
+
+
+
+
+
+
+I changed MySQL root pw to Walth[][]!
+
+
+
+
+[root@buffy nc00]#  mysqladmin -u root password
+New password:
+Confirm new password:
+
+
+
+
+[nc00@buffy ~]$ mysql -u root -p
+ Enter password:
+
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 9
+Server version: 5.5.37 MySQL Community Server (GPL)
+
+
+Copyright (c) 2000, 2014, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> exit
+Bye
+
+
+
+http://dev.mysql.com/doc/refman/5.5/en/linux-installation-rpm.html
+ /usr/local
+ [root@buffy local]# rpm -i  MySQL-test-5.5.37-1.rhel5.i386.rpm
+ [root@buffy local]# rpm -i MySQL-client-5.5.37-1.rhel5.i386.rpm
+         package MySQL-client-5.5.37-1.rhel5.i386 is already installed
+ [root@buffy local]# rpm -i MySQL-server-5.5.37-1.rhel5.i386.rpm
+         package MySQL-server-5.5.37-1.rhel5.i386 is already installed
+
+UTF-8
+
+[root@buffy etc]# more my.cnf
+[mysqld]
+character-set-server = utf8
+character-set-filesystem = utf8
+
+[root@buffy etc]# pwd
+/etc
+
+
+ GRANT ALL PRIVILEGES ON *.* TO 'USERNAME'@'192.168.1.9' IDENTIFIED BY 'PASSWORD' WITH GRANT OPTION;
+
+mysql> GRANT ALL PRIVILEGES ON *.* TO 'USERNAME'@'%' IDENTIFIED BY 'PASSWORD' WITH GRANT OPTION;
+
+Run a command like below to give access from specific IP.
+
+Three changes were made to get it working. Please see attached.
+
+
+
+
+1. Firewall IPtables changes to open 3306
+
+
+
+
+2. change MySQL config to bind to IP, 
+
+my.cnf# Instead of skip-networking the default is now to listen only on
+# localhost which is more compatible and is not less secure.
+
+
+comment this line: bind-address = 127.0.0.1
+
+#bind-address    = 192.168.1.151
+#skip-networking
+
+
+3. Grant access to remote users
+
+%  mysql -u root -p mysql
+ Enter password:
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+ Your MySQL connection id is 11
+Server version: 5.5.37 MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2014, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+ affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> GRANT ALL PRIVILEGES ON *.* TO 'hope'@'%' IDENTIFIED BY 'hope';
+ Query OK, 0 rows affected (0.00 sec)
+
+mysql> FLUSH PRIVILEGES;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> exit
+Bye
